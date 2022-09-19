@@ -1,28 +1,19 @@
 DROP TABLE if EXISTS cdm.dm_courier_ledger;
 
 CREATE TABLE cdm.dm_courier_ledger (
-	id serial4 NOT NULL, -- идентификатор записи
-	courier_id int8 NOT NULL, -- ID курьера, которому перечисляем.
-	courier_name varchar(100) NOT NULL, -- Ф. И. О. курьера.
-	settlement_year int4 NOT NULL, -- год отчёта
-	settlement_month int4 NOT NULL, -- месяц отчёта, где 1 — январь и 12 — декабрь.
-	orders_count int8 NOT NULL, -- количество заказов за период (месяц)
-	orders_total_sum numeric(14, 2) NULL DEFAULT 0, -- общая стоимость заказов.
-	rate_avg numeric(14, 2) NULL DEFAULT 0, -- средний рейтинг курьера по оценкам пользователей.
-	order_processing_fee numeric(14, 2) NULL DEFAULT 0, -- сумма, удержанная компанией за обработку заказов, которая высчитывается как orders_total_sum * 0.25
-	courier_order_sum numeric(14, 2) NULL DEFAULT 0, -- сумма, которую необходимо перечислить курьеру за доставленные им/ей заказы. За каждый доставленный заказ курьер должен получить некоторую сумму в зависимости от рейтинга
-	courier_tips_sum numeric(14, 2) NULL DEFAULT 0, -- сумма, которую пользователи оставили курьеру в качестве чаевых
-	courier_reward_sum numeric(14, 2) NULL DEFAULT 0, -- сумма, которую необходимо перечислить курьеру. Вычисляется как courier_order_sum + courier_tips_sum * 0.95 (5% — комиссия за обработку платежа)
-	CONSTRAINT "dm_courier_ledger__orders_total_sum _check" CHECK ((orders_total_sum >= (0)::numeric)),
-	CONSTRAINT dm_courier_ledger_check CHECK ((order_processing_fee >= (0)::numeric)),
-	CONSTRAINT "dm_courier_ledger_courier_order_sum _check" CHECK ((courier_order_sum >= (0)::numeric)),
-	CONSTRAINT "dm_courier_ledger_courier_reward_sum _check" CHECK ((courier_reward_sum >= (0)::numeric)),
-	CONSTRAINT "dm_courier_ledger_courier_tips_sum _check" CHECK ((courier_tips_sum >= (0)::numeric)),
-	CONSTRAINT "dm_courier_ledger_orders_count _check" CHECK ((orders_count >= 0)),
-	CONSTRAINT dm_courier_ledger_pkey PRIMARY KEY (id),
-	CONSTRAINT "dm_courier_ledger_rate_avg _check" CHECK ((rate_avg >= (0)::numeric)),
-	CONSTRAINT "dm_courier_ledger_settlement_month _check" CHECK (((settlement_month >= 1) AND (settlement_month <= 12))),
-	CONSTRAINT "dm_courier_ledger_settlement_year _check" CHECK (((settlement_year > 2021) AND (settlement_year < 2100)))
+	id serial PRIMARY KEY, 
+	courier_id int8 NOT NULL, 
+	courier_name varchar(100) NOT NULL,
+	settlement_year int4 NOT NULL CHECK ((settlement_year > 2021) AND (settlement_year < 2100)),
+	settlement_month int4 NOT NULL CHECK ((settlement_month >= 1) AND (settlement_month <= 12)), 
+	orders_count int8 NOT NULL CHECK (orders_count >= 0), 
+	orders_total_sum numeric(14, 2) NULL DEFAULT 0 CHECK(orders_total_sum >= (0)::numeric),
+	rate_avg numeric(14, 2) NULL DEFAULT 0 CHECK (rate_avg >= (0)::numeric), 
+	order_processing_fee numeric(14, 2) NULL DEFAULT 0 CHECK(order_processing_fee >= (0)::numeric), 
+	courier_order_sum numeric(14, 2) NULL DEFAULT 0 CHECK(courier_order_sum >= (0)::numeric), 
+	courier_tips_sum numeric(14, 2) NULL DEFAULT 0 CHECK (courier_tips_sum >= (0)::numeric), 
+	courier_reward_sum numeric(14, 2) NULL DEFAULT 0 CHECK (courier_reward_sum >= (0)::numeric)
+
 );
 
 -- Column comments

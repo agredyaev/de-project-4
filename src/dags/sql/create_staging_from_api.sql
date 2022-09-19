@@ -1,7 +1,7 @@
 drop table if exists stg.deliverysystem_restaurants;
 
 create table stg.deliverysystem_restaurants (
-id serial primary key,
+id serial PRIMARY KEY,
 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 data jsonb not null
 );
@@ -10,7 +10,7 @@ create index stg_restaurants_jsonb_idx on stg.deliverysystem_restaurants using G
 drop table if exists stg.deliverysystem_couriers;
 
 create table stg.deliverysystem_couriers (
-id serial primary key,
+id serial PRIMARY KEY,
 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 data jsonb
 );
@@ -20,7 +20,7 @@ create index stg_couriers_jsonb_idx on stg.deliverysystem_couriers using GIN (da
 drop table if exists stg.deliverysystem_deliveries;
 
 create table stg.deliverysystem_deliveries (
-id serial primary key,
+id serial PRIMARY KEY,
 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 data jsonb not null
 );
